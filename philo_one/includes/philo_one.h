@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_one.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wphylici <wphylici@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wphylici <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/14 00:44:11 by wphylici          #+#    #+#             */
-/*   Updated: 2021/02/16 18:55:17 by wphylici         ###   ########.fr       */
+/*   Updated: 2021/02/18 18:10:06 by wphylici         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <stdio.h>
 # include <pthread.h>
 # include <unistd.h>
+# include <stdlib.h>
 
 int	ft_atoi(const char *str);
 
