@@ -3,21 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   philo_one.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wphylici <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: wphylici <wphylici@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/14 00:40:46 by wphylici          #+#    #+#             */
-/*   Updated: 2021/02/20 15:32:02 by wphylici         ###   ########.fr       */
+/*   Updated: 2021/02/23 22:24:06 by wphylici         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo_one.h"
-
-// typedef struct		s_data
-// {
-// 	pthread_t 		t;
-// 	pthread_mutex_t	m;
-
-// }					t_data;
 
 typedef struct		s_philo
 {
@@ -26,16 +19,23 @@ typedef struct		s_philo
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				h_m_must_eat;
-	int				n;
-	pthread_t 		t;
-	pthread_mutex_t	m;
-	// t_data			*data;
+	unsigned int	n;
+	pthread_mutex_t left_fork;
+    pthread_mutex_t	right_fork;
 
 }					t_philo;
 
-void	parse(t_philo *ph, char **argv)
+typedef struct		s_data
 {
-	ph->num_of_philo = ft_atoi(argv[1]);
+	pthread_t 		*t;
+	pthread_mutex_t	*m;
+	t_philo			*ph;
+
+}					t_data;
+
+void	parse(t_data *data, char **argv)
+{
+	data->ph->num_of_philo = ft_atoi(argv[1]);
 	// ph->time_to_die = ft_atoi(argv[2]);
 	// ph->time_to_eat = ft_atoi(argv[3]);
 	// ph->time_to_sleep = ft_atoi(argv[4]);
@@ -46,41 +46,70 @@ void	parse(t_philo *ph, char **argv)
 	// printf("error: incorrect format argument\n");
 }
 
-void *proc(void *str)
+void	*proc(void *str)
 {
 	int i;
 	t_philo *ph;
 
 	ph = str;
-	int lo;
 	while (1)
 	{
 		printf("ph %d take fork\n", ph->n);
+
 	}
 	return NULL;
 }
 
-void	start(t_philo *ph)
+void	init_mutex(t_data *data)
 {
-	int				i;
-
-	char	*str = "1 1 1 1 1 1 1 1 1 1";
+	int i;
 
 	i = 0;
-	//pthread_mutex_init(&m, NULL);
-	//ph->t = (pthread_t *)malloc(sizeof(pthread_t));
-	while (i < ph->num_of_philo)
+	while (i < data->ph->num_of_philo)
 	{
-		ph->n = i;
-		pthread_create(&ph[i].t, NULL, proc, (void *)ph);
-		pthread_join(ph[i].t, NULL);
+		pthread_mutex_init(&data->m[i], NULL);
 		i++;
 	}
 }
 
+void	init_philo()
+
+void	start(t_data *data)
+{
+	int				i;
+
+	i = 0;
+	init_mutex(data);
+	init_philo(data);
+	while (i < data->ph->num_of_philo)
+	{
+		data->ph->n = i;
+		pthread_create(&data->t[i], NULL, proc, (void *)data);
+		pthread_join(data->t[i], NULL);
+		i++;
+	}
+}
+
+void	init_struct(t_data *data, char **argv)
+{
+	int i;
+	int num_ph;
+
+	i = 0;
+	num_ph = ft_atoi(argv[1]);
+	if (!(data->t = (t_data *)malloc(sizeof(t_data) * num_ph)))
+		exit(EXIT_FAILURE);
+	if (!(data->m = (t_data *)malloc(sizeof(t_data) * num_ph)))
+		exit(EXIT_FAILURE);
+	if (!(data->ph = (t_data *)malloc(sizeof(t_data) * num_ph)))
+		exit(EXIT_FAILURE);
+	while (i < num_ph)
+		parse(&data->ph[i++], argv);
+}
+
 int		main(int argc, char **argv)
 {
-	t_philo ph[ft_atoi(argv[1])];
+	t_data data;
 
 	//if (argc < 5 || argc > 6)
 	//	printf("error: incorrect number of arguments\n");
@@ -88,8 +117,8 @@ int		main(int argc, char **argv)
 	// {
 	if (argc > 1)
 	{
-		parse(ph, argv);
-		start(ph);
+		init_struct(&data, argv);
+		start(&data);
 	}
 	return (0);
 }
