@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_one.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wphylici <wphylici@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wphylici <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/14 00:40:46 by wphylici          #+#    #+#             */
-/*   Updated: 2021/02/23 22:24:06 by wphylici         ###   ########.fr       */
+/*   Updated: 2021/02/24 13:15:34 by wphylici         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ typedef struct		s_philo
 	int				time_to_sleep;
 	int				h_m_must_eat;
 	unsigned int	n;
-	pthread_mutex_t left_fork;
-    pthread_mutex_t	right_fork;
+	unsigned int 	left_fork;
+    unsigned int	right_fork;
 
 }					t_philo;
 
@@ -49,12 +49,12 @@ void	parse(t_data *data, char **argv)
 void	*proc(void *str)
 {
 	int i;
-	t_philo *ph;
+	t_data *data;
 
-	ph = str;
+	data = (t_data *)str;
 	while (1)
 	{
-		printf("ph %d take fork\n", ph->n);
+		printf("ph %d take fork\n", data->n);
 
 	}
 	return NULL;
@@ -72,18 +72,38 @@ void	init_mutex(t_data *data)
 	}
 }
 
-void	init_philo()
+void	init_philo(t_data *data)
+{
+	int i;
+	int l;
+	int	r;
+
+	i = 0;
+	l = 0;
+	r = 1;
+	while (i < data->ph->num_of_philo)
+	{
+		data->ph[i].left_fork = l;
+		data->ph[i].right_fork = r;
+		l++;
+		if (r == data->ph->num_of_philo - 1)
+			r = 0;
+		else
+			r++;
+		i++;
+	}
+}
 
 void	start(t_data *data)
 {
-	int				i;
+	int	i;
 
 	i = 0;
 	init_mutex(data);
 	init_philo(data);
 	while (i < data->ph->num_of_philo)
 	{
-		data->ph->n = i;
+		data->ph[i].n = i;
 		pthread_create(&data->t[i], NULL, proc, (void *)data);
 		pthread_join(data->t[i], NULL);
 		i++;
