@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_one.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wphylici <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: wphylici <wphylici@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/14 00:40:46 by wphylici          #+#    #+#             */
-/*   Updated: 2021/02/24 13:15:34 by wphylici         ###   ########.fr       */
+/*   Updated: 2021/02/28 18:36:43 by wphylici         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,57 +22,94 @@ typedef struct		s_philo
 	unsigned int	n;
 	unsigned int 	left_fork;
     unsigned int	right_fork;
+	pthread_t 		*t;
+	pthread_mutex_t	*m;
 
 }					t_philo;
 
-typedef struct		s_data
+void	parse(t_philo *ph, char **argv)
 {
-	pthread_t 		*t;
-	pthread_mutex_t	*m;
-	t_philo			*ph;
-
-}					t_data;
-
-void	parse(t_data *data, char **argv)
-{
-	data->ph->num_of_philo = ft_atoi(argv[1]);
-	// ph->time_to_die = ft_atoi(argv[2]);
-	// ph->time_to_eat = ft_atoi(argv[3]);
-	// ph->time_to_sleep = ft_atoi(argv[4]);
+	ph->num_of_philo = ft_atoi(argv[1]);
+	ph->time_to_die = ft_atoi(argv[2]) * 1000;
+	ph->time_to_eat = ft_atoi(argv[3]) * 1000;
+	ph->time_to_sleep = ft_atoi(argv[4]) * 1000;
 	// ph->h_m_must_eat = ft_atoi(argv[5]);
 	// if (ph->num_of_philo < 2 || ph->time_to_die < 1 ||
-	// ph->time_to_eat < 1 || ph->time_to_sleep < 1 ||
-	// ph->h_m_must_eat < 1)
-	// printf("error: incorrect format argument\n");
+	// 	ph->time_to_eat < 1 || ph->time_to_sleep < 1 ||
+	// 	ph->h_m_must_eat < 1)
+	// 	printf("error: incorrect format argument\n");
 }
+
+void	time_die(t_philo *ph)
+{
+	static time_t	str_time = 0;
+	static int		count = 0;
+
+	if (time(0) - str_time >= 1)
+	{
+		str_time = time(0);
+	}
+	else
+		count++;
+}
+
+int		check_time(t_philo *ph)
+{
+	struct timeval tv;
+	struct timezone tz;
+	static time_t time_start;
+
+	gettimeofday(&tv,  &tz);
+	time_start = tv.tv_usec;
+	if (tv.tv_usec - time_start > ph->time_to_die)
+		return (-1);
+	return (0);
+}
+
 
 void	*proc(void *str)
 {
 	int i;
-	t_data *data;
+	t_philo *ph;
 
-	data = (t_data *)str;
+	ph = (t_philo *)str;
 	while (1)
 	{
-		printf("ph %d take fork\n", data->n);
+		if (check_time(ph))
+		{
+			printf("ph %d is dead\n", ph->n);
+			exit(0);
+		}
+		pthread_mutex_lock(&ph->m[ph->left_fork]);
+		pthread_mutex_lock(&ph->m[ph->right_fork]);
 
+		printf("ph %d take fork\n", ph->n);
+		printf("ph %d is eating\n", ph->n);
+
+		usleep(ph->time_to_eat);
+		pthread_mutex_unlock(&ph->m[ph->right_fork]);
+		pthread_mutex_unlock(&ph->m[ph->left_fork]);
+
+		printf("ph %d finished dinner\n", ph->n);
+		printf("ph %d is sleeping\n", ph->n);
+		usleep(ph->time_to_sleep);
 	}
 	return NULL;
 }
 
-void	init_mutex(t_data *data)
+void	init_mutex(t_philo *ph)
 {
 	int i;
 
 	i = 0;
-	while (i < data->ph->num_of_philo)
+	while (i < ph->num_of_philo)
 	{
-		pthread_mutex_init(&data->m[i], NULL);
+		pthread_mutex_init(&ph->m[i], NULL);
 		i++;
 	}
 }
 
-void	init_philo(t_data *data)
+void	init_philo(t_philo *ph)
 {
 	int i;
 	int l;
@@ -81,12 +118,12 @@ void	init_philo(t_data *data)
 	i = 0;
 	l = 0;
 	r = 1;
-	while (i < data->ph->num_of_philo)
+	while (i < ph->num_of_philo)
 	{
-		data->ph[i].left_fork = l;
-		data->ph[i].right_fork = r;
+		ph[i].left_fork = l;
+		ph[i].right_fork = r;
 		l++;
-		if (r == data->ph->num_of_philo - 1)
+		if (r == ph->num_of_philo - 1)
 			r = 0;
 		else
 			r++;
@@ -94,51 +131,60 @@ void	init_philo(t_data *data)
 	}
 }
 
-void	start(t_data *data)
+void	start(t_philo *ph)
 {
 	int	i;
 
 	i = 0;
-	init_mutex(data);
-	init_philo(data);
-	while (i < data->ph->num_of_philo)
+	while (i < ph->num_of_philo)
 	{
-		data->ph[i].n = i;
-		pthread_create(&data->t[i], NULL, proc, (void *)data);
-		pthread_join(data->t[i], NULL);
+		ph[i].n = i;
+		pthread_create(&ph->t[i], NULL, proc, (void *)&ph[i]);
+		usleep(1000);
+		i++;
+	}
+	i = 0;
+	while (i < ph->num_of_philo)
+	{
+		pthread_join(ph->t[i], NULL);
 		i++;
 	}
 }
 
-void	init_struct(t_data *data, char **argv)
+void	init_struct(t_philo *ph, char **argv)
 {
 	int i;
 	int num_ph;
 
 	i = 0;
 	num_ph = ft_atoi(argv[1]);
-	if (!(data->t = (t_data *)malloc(sizeof(t_data) * num_ph)))
+	if (!(ph->t = (pthread_t *)malloc(sizeof(pthread_t) * num_ph)))
 		exit(EXIT_FAILURE);
-	if (!(data->m = (t_data *)malloc(sizeof(t_data) * num_ph)))
-		exit(EXIT_FAILURE);
-	if (!(data->ph = (t_data *)malloc(sizeof(t_data) * num_ph)))
+	if (!(ph->m = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * num_ph)))
 		exit(EXIT_FAILURE);
 	while (i < num_ph)
-		parse(&data->ph[i++], argv);
+	{
+		ph[i].m = ph[0].m;
+		parse(&ph[i++], argv);
+	}
+	init_mutex(ph);
+	init_philo(ph);
 }
 
 int		main(int argc, char **argv)
 {
-	t_data data;
+	t_philo *ph;
 
 	//if (argc < 5 || argc > 6)
 	//	printf("error: incorrect number of arguments\n");
 	// else
 	// {
+	if (!(ph = (t_philo *)malloc(sizeof(t_philo) * ft_atoi(argv[1]))))
+		exit(EXIT_FAILURE);
 	if (argc > 1)
 	{
-		init_struct(&data, argv);
-		start(&data);
+		init_struct(ph, argv);
+		start(ph);
 	}
 	return (0);
 }
