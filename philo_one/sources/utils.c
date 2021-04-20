@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wphylici <wphylici@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wphylici <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/14 00:37:54 by wphylici          #+#    #+#             */
-/*   Updated: 2021/02/14 00:47:46 by wphylici         ###   ########.fr       */
+/*   Updated: 2021/04/20 04:59:54 by wphylici         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo_one.h"
 
-int	ft_atoi(const char *str)
+unsigned int ft_atoi(const char *str)
 {
 	int			i;
 	long long	res;
