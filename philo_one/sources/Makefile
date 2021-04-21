@@ -6,7 +6,7 @@ CC			=	gcc
 
 FLAGS		=	-g -Wall -Wextra -Werror
 
-SRCS		=	./main.c ./utils.c
+SRCS		=	./main.c ./parse.c ./init.c ./utils.c
 
 OBJS		=	$(SRCS:%.c=%.o)
 

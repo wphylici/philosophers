@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wphylici <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: wphylici <wphylici@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/14 00:37:54 by wphylici          #+#    #+#             */
-/*   Updated: 2021/04/20 04:59:54 by wphylici         ###   ########.fr       */
+/*   Updated: 2021/04/21 06:44:35 by wphylici         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo_one.h"
 
-unsigned int ft_atoi(const char *str)
+unsigned int	ft_atoi(const char *str)
 {
 	int			i;
 	long long	res;
@@ -22,7 +22,7 @@ unsigned int ft_atoi(const char *str)
 	res = 0;
 	neg = 1;
 	while (str[i] == '\n' || str[i] == '\r' || str[i] == '\v' || str[i] == '\t'
-	|| str[i] == '\f' || str[i] == ' ' || str[i] == '0' )
+		|| str[i] == '\f' || str[i] == ' ' || str[i] == '0')
 		i++;
 	if (str[i] == '-')
 		neg = -1;
@@ -38,4 +38,33 @@ unsigned int ft_atoi(const char *str)
 			return (0);
 	}
 	return (res * neg);
+}
+
+size_t	get_time(void)
+{
+	struct timeval	tv;
+
+	if (gettimeofday(&tv, NULL) == -1)
+		return (0);
+	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
+}
+
+int	upgrade_usleep(double msec)
+{
+	size_t	start;
+
+	start = get_time();
+	while (get_time() - start < msec)
+		usleep(100);
+	return (0);
+}
+
+void	print_logs(char *str, t_philo *ph)
+{
+	if (!block_print)
+	{
+		pthread_mutex_lock(&ph->m[ph->print_mutext]);
+		printf("[%lu] ph %d %s\n", get_time() - ph->start_time, ph->n + 1, str);
+		pthread_mutex_unlock(&ph->m[ph->print_mutext]);
+	}
 }
