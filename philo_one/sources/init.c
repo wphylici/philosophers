@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wphylici <wphylici@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wphylici <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 06:36:00 by wphylici          #+#    #+#             */
-/*   Updated: 2021/04/21 06:37:14 by wphylici         ###   ########.fr       */
+/*   Updated: 2021/04/21 16:59:31 by wphylici         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	init_mutex(t_philo **ph)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (i < (*ph)->num_of_philo + 1)
@@ -26,9 +26,9 @@ void	init_mutex(t_philo **ph)
 
 void	init_philo(t_philo **ph)
 {
-	int i;
-	int l;
-	int r;
+	int	i;
+	int	l;
+	int	r;
 
 	i = 0;
 	l = 0;
@@ -48,14 +48,16 @@ void	init_philo(t_philo **ph)
 
 int	init_struct(t_philo **ph, char **argv)
 {
-	int i;
-	int num_ph;
+	int	i;
+	int	num_ph;
 
 	i = 0;
 	num_ph = ft_atoi(argv[1]);
-	if (!((*ph)->t = (pthread_t *)malloc(sizeof(pthread_t) * num_ph)))
+	(*ph)->t = (pthread_t *)malloc(sizeof(pthread_t) * num_ph);
+	if (!(*ph)->t)
 		return (-1);
-	if (!((*ph)->m = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * num_ph + 1)))
+	(*ph)->m = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * num_ph + 1);
+	if (!(*ph)->m)
 		return (-1);
 	while (i < num_ph)
 	{

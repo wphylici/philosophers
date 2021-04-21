@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wphylici <wphylici@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wphylici <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/14 00:40:46 by wphylici          #+#    #+#             */
-/*   Updated: 2021/04/21 06:39:48 by wphylici         ###   ########.fr       */
+/*   Updated: 2021/04/21 16:55:45 by wphylici         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	check_die(t_philo *ph)
 {
-	size_t tmp;
+	size_t	tmp;
 
 	if (!ph->count_eat)
 		tmp = 0;
@@ -23,7 +23,8 @@ int	check_die(t_philo *ph)
 	if ((size_t)ph->time_to_die < tmp)
 	{
 		block_print = 1;
-		!death_flag && printf("[%lu] ph %d is die\n", get_time() - ph->start_time,
+		!death_flag && printf("[%lu] ph %d is die\n",
+		get_time() - ph->start_time,
 		ph->n + 1);
 		death_flag = 1;
 		return (-1);
@@ -34,7 +35,7 @@ int	check_die(t_philo *ph)
 
 void	*proc(void *ptr)
 {
-	t_philo *ph;
+	t_philo	*ph;
 
 	ph = (t_philo *)ptr;
 	ph->time_last_eat = ph->start_time;
@@ -44,20 +45,14 @@ void	*proc(void *ptr)
 		print_logs("take left fork", ph);
 		pthread_mutex_lock(&ph->m[ph->right_fork]);
 		print_logs("take right fork", ph);
-
 		ph->time_last_eat = get_time();
 		++ph->count_eat;
 		ph->h_m_must_eat--;
-
 		print_logs("is eating", ph);
-
 		upgrade_usleep(ph->time_to_eat);
-
 		pthread_mutex_unlock(&ph->m[ph->right_fork]);
 		pthread_mutex_unlock(&ph->m[ph->left_fork]);
-
 		print_logs("is sleeping", ph);
-
 		upgrade_usleep(ph->time_to_sleep);
 		print_logs("is thinking", ph);
 	}
@@ -66,13 +61,13 @@ void	*proc(void *ptr)
 
 void	*die(void *ptr)
 {
-	t_philo *ph;
+	t_philo	*ph;
 
 	ph = (t_philo *)ptr;
 	while (1)
 	{
 		if (check_die(ph))
-			break;
+			break ;
 	}
 	return (NULL);
 }
@@ -89,8 +84,8 @@ void	start(t_philo *ph)
 			time = get_time();
 		ph[i].n = i;
 		ph[i].start_time = time;
-		if (i % 2 == 1) // ???
-			upgrade_usleep(0.01);;
+		if (i % 2 == 1)
+			upgrade_usleep(0.01);
 		pthread_create(&ph->t[i], NULL, proc, (void *)&ph[i]);
 		pthread_create(&ph->t[i], NULL, die, (void *)&ph[i]);
 		i++;
@@ -100,9 +95,9 @@ void	start(t_philo *ph)
 		pthread_join(ph->t[i++], NULL);
 }
 
-int		main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
-	t_philo *ph;
+	t_philo	*ph;
 
 	if (argc < 5 || argc > 6)
 	{
@@ -111,7 +106,8 @@ int		main(int argc, char **argv)
 	}
 	else
 	{
-		if (!(ph = (t_philo *)malloc(sizeof(t_philo) * ft_atoi(argv[1]))))
+		ph = (t_philo *)malloc(sizeof(t_philo) * ft_atoi(argv[1]));
+		if (!ph)
 			return (-1);
 		if (init_struct(&ph, argv))
 			return (-1);
