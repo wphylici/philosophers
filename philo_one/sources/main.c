@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wphylici <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: wphylici <wphylici@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/14 00:40:46 by wphylici          #+#    #+#             */
-/*   Updated: 2021/04/21 16:55:45 by wphylici         ###   ########.fr       */
+/*   Updated: 2021/04/22 13:22:33 by wphylici         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,20 +16,22 @@ int	check_die(t_philo *ph)
 {
 	size_t	tmp;
 
-	if (!ph->count_eat)
+	if (!ph->count_eat_each)
 		tmp = 0;
 	else
+	{
+		pthread_mutex_lock(&ph->m[ph->last_eat_mutex]);
 		tmp = get_time() - ph->time_last_eat;
+		pthread_mutex_unlock(&ph->m[ph->last_eat_mutex]);
+	}
 	if ((size_t)ph->time_to_die < tmp)
 	{
-		block_print = 1;
-		!death_flag && printf("[%lu] ph %d is die\n",
-		get_time() - ph->start_time,
-		ph->n + 1);
 		death_flag = 1;
+		!block_print && printf("[%lu] ph %d is die\n",
+		get_time() - ph->start_time, ph->n + 1);
+		block_print = 1;
 		return (-1);
 	}
-	upgrade_usleep(0.1);
 	return (0);
 }
 
@@ -39,15 +41,18 @@ void	*proc(void *ptr)
 
 	ph = (t_philo *)ptr;
 	ph->time_last_eat = ph->start_time;
-	while (ph->h_m_must_eat)
+	while (ph->h_m_must_eat && !death_flag)
 	{
 		pthread_mutex_lock(&ph->m[ph->left_fork]);
 		print_logs("take left fork", ph);
 		pthread_mutex_lock(&ph->m[ph->right_fork]);
 		print_logs("take right fork", ph);
+		pthread_mutex_lock(&ph->m[ph->last_eat_mutex]);
 		ph->time_last_eat = get_time();
-		++ph->count_eat;
-		ph->h_m_must_eat--;
+		pthread_mutex_unlock(&ph->m[ph->last_eat_mutex]);
+		++ph->count_eat_each;
+		++count_eat_total;
+		--ph->h_m_must_eat;
 		print_logs("is eating", ph);
 		upgrade_usleep(ph->time_to_eat);
 		pthread_mutex_unlock(&ph->m[ph->right_fork]);
@@ -59,20 +64,24 @@ void	*proc(void *ptr)
 	return (NULL);
 }
 
-void	*die(void *ptr)
+int	check_status(t_philo *ph)
 {
-	t_philo	*ph;
+	int i;
 
-	ph = (t_philo *)ptr;
-	while (1)
+	i = 0;
+	while (count_eat_total / ph->num_of_philo != ph->tmp_h_m_must_eat)
 	{
-		if (check_die(ph))
-			break ;
+		if (i == ph->num_of_philo - 1)
+			i = 0;
+		if (check_die(&ph[i]))
+			return(-1);
+		++i;
+		upgrade_usleep(0.1);
 	}
-	return (NULL);
+	return (-1);
 }
 
-void	start(t_philo *ph)
+int 	start(t_philo *ph)
 {
 	size_t			time;
 	int				i;
@@ -87,12 +96,14 @@ void	start(t_philo *ph)
 		if (i % 2 == 1)
 			upgrade_usleep(0.01);
 		pthread_create(&ph->t[i], NULL, proc, (void *)&ph[i]);
-		pthread_create(&ph->t[i], NULL, die, (void *)&ph[i]);
-		i++;
+		++i;
 	}
 	i = 0;
+	if (check_status(ph))
+		return (-1);
 	while (i < ph->num_of_philo)
 		pthread_join(ph->t[i++], NULL);
+	return (0);
 }
 
 int	main(int argc, char **argv)

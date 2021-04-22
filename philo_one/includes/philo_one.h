@@ -6,7 +6,7 @@
 /*   By: wphylici <wphylici@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/14 00:44:11 by wphylici          #+#    #+#             */
-/*   Updated: 2021/04/21 06:40:27 by wphylici         ###   ########.fr       */
+/*   Updated: 2021/04/22 10:09:29 by wphylici         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,13 @@ typedef struct		s_philo
 	int				num_of_philo;
 	int				time_to_sleep;
 	int				h_m_must_eat;
-	int				count_eat;
+	int				tmp_h_m_must_eat;
+	int				count_eat_each;
 	int				n;
 	int 			left_fork;
     int				right_fork;
 	int				print_mutext;
+	int				last_eat_mutex;
 	size_t			time_last_eat;
 	size_t			start_time;
 	pthread_t 		*t;
@@ -41,6 +43,7 @@ typedef struct		s_philo
 
 int block_print;
 int death_flag;
+int count_eat_total;
 
 unsigned int		ft_atoi(const char *str);
 size_t				get_time(void);

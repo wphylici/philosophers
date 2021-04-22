@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wphylici <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: wphylici <wphylici@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/14 00:37:54 by wphylici          #+#    #+#             */
-/*   Updated: 2021/04/21 16:56:29 by wphylici         ###   ########.fr       */
+/*   Updated: 2021/04/21 20:36:12 by wphylici         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,11 @@ int	upgrade_usleep(double msec)
 
 void	print_logs(char *str, t_philo *ph)
 {
-	if (!block_print)
+	if (!death_flag)
 	{
 		pthread_mutex_lock(&ph->m[ph->print_mutext]);
-		printf("[%lu] ph %d %s\n", get_time() - ph->start_time, ph->n + 1, str);
+		if (!death_flag)
+			printf("[%lu] ph %d %s\n", get_time() - ph->start_time, ph->n + 1, str);
 		pthread_mutex_unlock(&ph->m[ph->print_mutext]);
 	}
 }

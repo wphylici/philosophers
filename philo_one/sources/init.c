@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wphylici <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: wphylici <wphylici@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 06:36:00 by wphylici          #+#    #+#             */
-/*   Updated: 2021/04/21 16:59:31 by wphylici         ###   ########.fr       */
+/*   Updated: 2021/04/21 18:59:33 by wphylici         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	init_mutex(t_philo **ph)
 	int	i;
 
 	i = 0;
-	while (i < (*ph)->num_of_philo + 1)
+	while (i < (*ph)->num_of_philo + 2)
 	{
 		pthread_mutex_init(&(*ph)->m[i], NULL);
 		i++;
@@ -56,7 +56,7 @@ int	init_struct(t_philo **ph, char **argv)
 	(*ph)->t = (pthread_t *)malloc(sizeof(pthread_t) * num_ph);
 	if (!(*ph)->t)
 		return (-1);
-	(*ph)->m = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * num_ph + 1);
+	(*ph)->m = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * num_ph + 2);
 	if (!(*ph)->m)
 		return (-1);
 	while (i < num_ph)
