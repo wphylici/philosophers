@@ -6,11 +6,11 @@
 /*   By: wphylici <wphylici@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/14 00:37:54 by wphylici          #+#    #+#             */
-/*   Updated: 2021/04/23 13:09:16 by wphylici         ###   ########.fr       */
+/*   Updated: 2021/04/23 13:38:58 by wphylici         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/philo_one.h"
+#include "../includes/philo_two.h"
 
 unsigned int	ft_atoi(const char *str)
 {

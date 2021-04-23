@@ -6,11 +6,11 @@
 /*   By: wphylici <wphylici@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 06:36:00 by wphylici          #+#    #+#             */
-/*   Updated: 2021/04/23 13:31:51 by wphylici         ###   ########.fr       */
+/*   Updated: 2021/04/23 13:38:38 by wphylici         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/philo_one.h"
+#include "../includes/philo_two.h"
 
 int	str_error(char *str, int ret)
 {

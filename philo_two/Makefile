@@ -1,4 +1,4 @@
-NAME		=	philo_one
+NAME		=	philo_two
 
 #HEADER		=	./includes/
 
@@ -6,7 +6,7 @@ CC			=	gcc
 
 FLAGS		=	-g -Wall -Wextra -Werror
 
-SRCS		=	./main.c ./parse.c ./init.c ./utils.c
+SRCS		=	./sources/main.c ./sources/parse.c ./sources/init.c ./sources/utils.c
 
 OBJS		=	$(SRCS:%.c=%.o)
 
