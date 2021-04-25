@@ -6,7 +6,7 @@
 /*   By: wphylici <wphylici@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/14 00:37:54 by wphylici          #+#    #+#             */
-/*   Updated: 2021/04/23 13:09:16 by wphylici         ###   ########.fr       */
+/*   Updated: 2021/04/24 18:09:24 by wphylici         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	print_logs(char *str, t_philo *ph)
 	{
 		pthread_mutex_lock(&ph->m[ph->print_mutext]);
 		if (!g_death_flag)
-			printf("[%lu] ph %d %s\n", get_time() - ph->start_time,
+			printf("\e[0;93m[%lu]\e[0m ph %d %s\n", get_time() - ph->start_time,
 				ph->n + 1, str);
 		pthread_mutex_unlock(&ph->m[ph->print_mutext]);
 	}

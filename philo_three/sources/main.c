@@ -6,7 +6,7 @@
 /*   By: wphylici <wphylici@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/14 00:40:46 by wphylici          #+#    #+#             */
-/*   Updated: 2021/04/25 05:12:09 by wphylici         ###   ########.fr       */
+/*   Updated: 2021/04/25 01:29:50 by wphylici         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ int 	start(t_philo *ph)
 	while (i < ph->num_of_philo)
 		pthread_join(ph->t[i++], NULL);
 	i = 0;
-
+	
 	while (i < ph->num_of_philo)
 		sem_close(&ph->forks_sem[i]);
 	return (0);

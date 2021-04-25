@@ -6,7 +6,7 @@
 /*   By: wphylici <wphylici@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/14 00:40:46 by wphylici          #+#    #+#             */
-/*   Updated: 2021/04/23 13:32:21 by wphylici         ###   ########.fr       */
+/*   Updated: 2021/04/24 18:11:02 by wphylici         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	check_die(t_philo *ph)
 	if ((size_t)ph->time_to_die < tmp)
 	{
 		g_death_flag = 1;
-		!g_block_print && printf("[%lu] ph %d is die\n",
+		!g_block_print && printf("\e[0;93m[%lu]\e[0m ph %d \e[0;91mis die\e[0m\n",
 		get_time() - ph->start_time, ph->n + 1);
 		g_block_print = 1;
 		return (-1);
