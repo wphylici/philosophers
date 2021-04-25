@@ -6,11 +6,11 @@
 /*   By: wphylici <wphylici@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 06:39:59 by wphylici          #+#    #+#             */
-/*   Updated: 2021/04/25 00:38:39 by wphylici         ###   ########.fr       */
+/*   Updated: 2021/04/25 11:22:56 by wphylici         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/philo_two.h"
+#include "../includes/philo_three.h"
 
 int	check_symb(char **argv)
 {

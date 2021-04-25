@@ -6,7 +6,7 @@
 /*   By: wphylici <wphylici@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/14 00:40:46 by wphylici          #+#    #+#             */
-/*   Updated: 2021/04/24 18:11:02 by wphylici         ###   ########.fr       */
+/*   Updated: 2021/04/25 12:59:29 by wphylici         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,10 +115,7 @@ int	main(int argc, char **argv)
 
 	ph = NULL;
 	if (argc < 5 || argc > 6)
-	{
-		my_free(ph);
 		return (str_error("error: incorrect number of arguments", -1));
-	}
 	else
 	{
 		ph = (t_philo *)malloc(sizeof(t_philo) * ft_atoi(argv[1]));

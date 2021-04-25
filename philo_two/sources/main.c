@@ -6,7 +6,7 @@
 /*   By: wphylici <wphylici@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/14 00:40:46 by wphylici          #+#    #+#             */
-/*   Updated: 2021/04/25 05:12:09 by wphylici         ###   ########.fr       */
+/*   Updated: 2021/04/25 19:51:06 by wphylici         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@ int	check_die(t_philo *ph)
 		tmp = 0;
 	else
 	{
-		sem_wait(ph->last_eat_sem);
+		sem_wait(ph->sem->last_eat_sem);
 		tmp = get_time() - ph->time_last_eat;
-		sem_post(ph->last_eat_sem);
+		sem_post(ph->sem->last_eat_sem);
 	}
 	if ((size_t)ph->time_to_die < tmp)
 	{
@@ -43,20 +43,20 @@ void	*proc(void *ptr)
 	ph->time_last_eat = ph->start_time;
 	while (ph->h_m_must_eat && !g_death_flag)
 	{
-		sem_wait(ph->forks_sem);
-		print_logs("take left fork", ph);
-		sem_wait(ph->forks_sem);
-		print_logs("take right fork", ph);
-		sem_wait(ph->last_eat_sem);
+		sem_wait(ph->sem->forks_sem);
+		print_logs("take fork", ph);
+		sem_wait(ph->sem->forks_sem);
+		print_logs("take fork", ph);
+		sem_wait(ph->sem->last_eat_sem);
 		ph->time_last_eat = get_time();
-		sem_post(ph->last_eat_sem);
+		sem_post(ph->sem->last_eat_sem);
 		++ph->count_eat_each;
 		++g_count_eat_total;
 		--ph->h_m_must_eat;
 		print_logs("is eating", ph);
 		upgrade_usleep(ph->time_to_eat);
-		sem_post(ph->forks_sem);
-		sem_post(ph->forks_sem);
+		sem_post(ph->sem->forks_sem);
+		sem_post(ph->sem->forks_sem);
 		print_logs("is sleeping", ph);
 		upgrade_usleep(ph->time_to_sleep);
 		print_logs("is thinking", ph);
@@ -106,7 +106,7 @@ int 	start(t_philo *ph)
 	i = 0;
 
 	while (i < ph->num_of_philo)
-		sem_close(&ph->forks_sem[i]);
+		sem_close(&ph->sem->forks_sem[i]);
 	return (0);
 }
 
@@ -116,14 +116,14 @@ int	main(int argc, char **argv)
 
 	ph = NULL;
 	if (argc < 5 || argc > 6)
-	{
-		my_free(ph);
 		return (str_error("error: incorrect number of arguments", -1));
-	}
 	else
 	{
 		ph = (t_philo *)malloc(sizeof(t_philo) * ft_atoi(argv[1]));
 		if (!ph)
+			return (-1);
+		ph->sem = (t_sem *)malloc(sizeof(t_sem));
+		if (!ph->sem)
 			return (-1);
 		if (init_struct(&ph, argv))
 		{

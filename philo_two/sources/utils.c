@@ -6,7 +6,7 @@
 /*   By: wphylici <wphylici@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/14 00:37:54 by wphylici          #+#    #+#             */
-/*   Updated: 2021/04/25 01:07:38 by wphylici         ###   ########.fr       */
+/*   Updated: 2021/04/25 18:55:58 by wphylici         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,11 +62,11 @@ void	print_logs(char *str, t_philo *ph)
 {
 	if (!g_death_flag)
 	{
-		sem_wait(ph->prin_sem);
+		sem_wait(ph->sem->print_sem);
 		if (!g_death_flag)
 			printf("\e[0;93m[%lu]\e[0m ph %d %s\n", get_time() - ph->start_time,
 				ph->n + 1, str);
-		sem_post(ph->prin_sem);
+		sem_post(ph->sem->print_sem);
 	}
 }
 

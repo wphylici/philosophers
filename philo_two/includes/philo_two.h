@@ -6,7 +6,7 @@
 /*   By: wphylici <wphylici@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/14 00:44:11 by wphylici          #+#    #+#             */
-/*   Updated: 2021/04/25 00:39:41 by wphylici         ###   ########.fr       */
+/*   Updated: 2021/04/25 19:43:33 by wphylici         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,14 @@
 # include <sys/time.h>
 # include <semaphore.h>
 
+typedef struct s_sem
+{
+	sem_t			*forks_sem;
+	sem_t			*print_sem;
+	sem_t			*take_forks_sem;
+	sem_t			*last_eat_sem;
+}				t_sem;
+
 typedef struct s_philo
 {
 	int				time_to_die;
@@ -31,14 +39,11 @@ typedef struct s_philo
 	int				tmp_h_m_must_eat;
 	int				count_eat_each;
 	int				n;
-	sem_t			*forks_sem;
-	sem_t			*prin_sem;
-	sem_t			*last_eat_sem;
-
 	size_t			time_last_eat;
+	// sem_t			*last_eat_sem;
 	size_t			start_time;
 	pthread_t		*t;
-
+	struct s_sem	*sem;
 }					t_philo;
 
 int					g_block_print;
