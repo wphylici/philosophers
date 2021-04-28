@@ -6,7 +6,7 @@
 /*   By: wphylici <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/14 00:37:54 by wphylici          #+#    #+#             */
-/*   Updated: 2021/04/28 18:27:54 by wphylici         ###   ########.fr       */
+/*   Updated: 2021/04/28 18:56:08 by wphylici         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,13 +49,34 @@ size_t	get_time(void)
 	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
+long long	time_diff(long long past, long long pres)
+{
+	return (pres - past);
+}
+
 void	upgrade_usleep(double msec)
 {
-	size_t	start;
+	// size_t	start;
 
-	start = get_time();
-	while (get_time() - start < msec)
-		usleep(100);
+	// start = get_time();
+	// while (get_time() - start < msec)
+	// 	usleep(100);
+
+	// long	time;
+
+	// time = get_time();
+	// while (get_time() < time + msec)
+	// 	usleep(msec);
+
+	long long i;
+
+	i = get_time();
+	while (!g_death_flag)
+	{
+		if (time_diff(i, get_time()) >= msec)
+			break ;
+		usleep(50);
+	}
 }
 
 void	print_logs(char *str, t_philo *ph)
