@@ -6,7 +6,7 @@
 /*   By: wphylici <wphylici@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/14 00:40:46 by wphylici          #+#    #+#             */
-/*   Updated: 2021/04/25 12:59:29 by wphylici         ###   ########.fr       */
+/*   Updated: 2021/04/27 03:00:11 by wphylici         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int	check_status(t_philo *ph)
 		if (check_die(&ph[i]))
 			return (-1);
 		++i;
-		upgrade_usleep(0.1);
+		// upgrade_usleep(0.1);
 	}
 	return (-1);
 }

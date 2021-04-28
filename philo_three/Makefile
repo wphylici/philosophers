@@ -4,16 +4,16 @@ NAME		=	philo_three
 
 CC			=	gcc
 
-FLAGS		=	-g# -Wall -Wextra -Werror
+FLAGS		=	-g -Wall -Wextra -Werror
 
-SRCS		=	./sources/main.c ./sources/parse.c ./sources/init.c ./sources/utils.c
+SRCS		=	./sources/main.c ./sources/parse.c ./sources/init.c ./sources/utils.c ./sources/check_data.c
 
 OBJS		=	$(SRCS:%.c=%.o)
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	@$(CC) $(FLAGS) $(OBJS) -o $(NAME)
+	@$(CC) $(FLAGS) $(OBJS) -o $(NAME) -lpthread
 
 %.o: %.c
 	$(CC) $(FLAGS) -c $< -o $@

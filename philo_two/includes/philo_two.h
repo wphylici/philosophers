@@ -6,12 +6,12 @@
 /*   By: wphylici <wphylici@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/14 00:44:11 by wphylici          #+#    #+#             */
-/*   Updated: 2021/04/25 19:43:33 by wphylici         ###   ########.fr       */
+/*   Updated: 2021/04/27 02:45:58 by wphylici         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILO_ONE_H
-# define PHILO_ONE_H
+#ifndef PHILO_TWO_H
+# define PHILO_TWO_H
 
 # include <stdio.h>
 # include <pthread.h>
@@ -25,9 +25,9 @@ typedef struct s_sem
 {
 	sem_t			*forks_sem;
 	sem_t			*print_sem;
-	sem_t			*take_forks_sem;
 	sem_t			*last_eat_sem;
-}				t_sem;
+	sem_t			*waiter;
+}					t_sem;
 
 typedef struct s_philo
 {
@@ -40,10 +40,9 @@ typedef struct s_philo
 	int				count_eat_each;
 	int				n;
 	size_t			time_last_eat;
-	// sem_t			*last_eat_sem;
 	size_t			start_time;
 	pthread_t		*t;
-	struct s_sem	*sem;
+	t_sem			*sem;
 }					t_philo;
 
 int					g_block_print;
@@ -58,5 +57,6 @@ void				print_logs(char *str, t_philo *ph);
 int					parse(t_philo *ph, char **argv);
 void				my_free(t_philo *ph);
 int					str_error(char *str, int ret);
+void				ft_sem_close(t_philo *ph);
 
 #endif

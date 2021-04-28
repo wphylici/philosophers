@@ -6,7 +6,7 @@
 /*   By: wphylici <wphylici@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/14 00:37:54 by wphylici          #+#    #+#             */
-/*   Updated: 2021/04/25 17:48:43 by wphylici         ###   ########.fr       */
+/*   Updated: 2021/04/28 12:19:23 by wphylici         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,24 +58,39 @@ void	upgrade_usleep(double msec)
 		usleep(100);
 }
 
-void	print_logs(char *str, t_philo *ph)
+void	ft_sem_close(t_philo *ph)
 {
-	if (!g_death_flag)
+	int	i;
+
+	i = 0;
+	if (ph->sem->forks_sem && ph->sem->last_eat_sem && ph->sem->print_sem
+		&& ph->sem->waiter)
 	{
-		sem_wait(ph->sem->prin_sem);
-		if (!g_death_flag)
-			printf("\e[0;93m[%lu]\e[0m ph %d %s\n", get_time() - ph->start_time,
-				ph->n + 1, str);
-		sem_post(ph->sem->prin_sem);
+		while (i < ph->num_of_philo)
+			sem_close(&ph->sem->forks_sem[i++]);
+		sem_close(ph->sem->last_eat_sem);
+		sem_close(ph->sem->print_sem);
+		sem_close(ph->sem->waiter);
 	}
 }
 
-void	my_free(t_philo *ph)
+void	my_exit(char *error, t_philo *ph)
 {
 	if (ph)
 	{
+		ft_sem_close(ph);
 		if (ph->t)
 			free(ph->t);
+		if (ph->sem)
+			free(ph->sem);
+		if (ph->pid)
+			free(ph->pid);
 		free(ph);
 	}
+	if (error)
+	{
+		printf("%s\n", error);
+		exit(EXIT_FAILURE);
+	}
+	exit (EXIT_SUCCESS);
 }

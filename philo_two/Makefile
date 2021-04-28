@@ -4,7 +4,7 @@ NAME		=	philo_two
 
 CC			=	gcc
 
-FLAGS		=	-g #-Wall -Wextra -Werror
+FLAGS		=	-g -Wall -Wextra -Werror -pthread
 
 SRCS		=	./sources/main.c ./sources/parse.c ./sources/init.c ./sources/utils.c
 

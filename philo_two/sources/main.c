@@ -6,7 +6,7 @@
 /*   By: wphylici <wphylici@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/14 00:40:46 by wphylici          #+#    #+#             */
-/*   Updated: 2021/04/25 19:51:06 by wphylici         ###   ########.fr       */
+/*   Updated: 2021/04/27 03:28:15 by wphylici         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ int	check_die(t_philo *ph)
 		g_block_print = 1;
 		return (-1);
 	}
+	usleep(10);
 	return (0);
 }
 
@@ -43,10 +44,12 @@ void	*proc(void *ptr)
 	ph->time_last_eat = ph->start_time;
 	while (ph->h_m_must_eat && !g_death_flag)
 	{
+		sem_wait(ph->sem->waiter);
 		sem_wait(ph->sem->forks_sem);
-		print_logs("take fork", ph);
+		print_logs("take left fork", ph);
 		sem_wait(ph->sem->forks_sem);
-		print_logs("take fork", ph);
+		print_logs("take right fork", ph);
+		sem_post(ph->sem->waiter);
 		sem_wait(ph->sem->last_eat_sem);
 		ph->time_last_eat = get_time();
 		sem_post(ph->sem->last_eat_sem);
@@ -76,7 +79,6 @@ int	check_status(t_philo *ph)
 		if (check_die(&ph[i]))
 			return (-1);
 		++i;
-		upgrade_usleep(0.1);
 	}
 	return (-1);
 }
@@ -103,10 +105,7 @@ int 	start(t_philo *ph)
 	i = 0;
 	while (i < ph->num_of_philo)
 		pthread_join(ph->t[i++], NULL);
-	i = 0;
-
-	while (i < ph->num_of_philo)
-		sem_close(&ph->sem->forks_sem[i]);
+	ft_sem_close(ph);
 	return (0);
 }
 
