@@ -6,7 +6,7 @@
 /*   By: wphylici <wphylici@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/14 00:40:46 by wphylici          #+#    #+#             */
-/*   Updated: 2021/04/27 03:28:15 by wphylici         ###   ########.fr       */
+/*   Updated: 2021/04/28 21:18:58 by wphylici         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,7 @@ int	check_die(t_philo *ph)
 	if (!ph->count_eat_each)
 		tmp = 0;
 	else
-	{
-		sem_wait(ph->sem->last_eat_sem);
 		tmp = get_time() - ph->time_last_eat;
-		sem_post(ph->sem->last_eat_sem);
-	}
 	if ((size_t)ph->time_to_die < tmp)
 	{
 		g_death_flag = 1;
@@ -42,7 +38,7 @@ void	*proc(void *ptr)
 
 	ph = (t_philo *)ptr;
 	ph->time_last_eat = ph->start_time;
-	while (ph->h_m_must_eat && !g_death_flag)
+	while (ph->count_eat_each != ph->h_m_must_eat && !g_death_flag)
 	{
 		sem_wait(ph->sem->waiter);
 		sem_wait(ph->sem->forks_sem);
@@ -50,12 +46,9 @@ void	*proc(void *ptr)
 		sem_wait(ph->sem->forks_sem);
 		print_logs("take right fork", ph);
 		sem_post(ph->sem->waiter);
-		sem_wait(ph->sem->last_eat_sem);
 		ph->time_last_eat = get_time();
-		sem_post(ph->sem->last_eat_sem);
 		++ph->count_eat_each;
 		++g_count_eat_total;
-		--ph->h_m_must_eat;
 		print_logs("is eating", ph);
 		upgrade_usleep(ph->time_to_eat);
 		sem_post(ph->sem->forks_sem);
@@ -72,7 +65,7 @@ int	check_status(t_philo *ph)
 	int	i;
 
 	i = 0;
-	while (g_count_eat_total / ph->num_of_philo != ph->tmp_h_m_must_eat)
+	while (g_count_eat_total / ph->num_of_philo != ph->h_m_must_eat)
 	{
 		if (i == ph->num_of_philo - 1)
 			i = 0;
@@ -89,14 +82,11 @@ int 	start(t_philo *ph)
 	int				i;
 
 	i = 0;
+	time = get_time();
 	while (i < ph->num_of_philo)
 	{
-		if (i == 0)
-			time = get_time();
 		ph[i].n = i;
 		ph[i].start_time = time;
-		if (i % 2 == 1)
-			upgrade_usleep(0.01);
 		pthread_create(&ph->t[i], NULL, proc, (void *)&ph[i]);
 		++i;
 	}
@@ -124,7 +114,7 @@ int	main(int argc, char **argv)
 		ph->sem = (t_sem *)malloc(sizeof(t_sem));
 		if (!ph->sem)
 			return (-1);
-		if (init_struct(&ph, argv))
+		if (init_struct(ph, argv))
 		{
 			my_free(ph);
 			return (-1);

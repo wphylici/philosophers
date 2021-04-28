@@ -6,7 +6,7 @@
 /*   By: wphylici <wphylici@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/14 00:40:46 by wphylici          #+#    #+#             */
-/*   Updated: 2021/04/28 10:58:04 by wphylici         ###   ########.fr       */
+/*   Updated: 2021/04/28 21:39:11 by wphylici         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 void	*proc(t_philo *ph)
 {
 	ph->time_last_eat = ph->start_time;
+	pthread_create(ph->t, NULL, check_status, (void *)ph);
 	while (ph->count_eat_each != ph->h_m_must_eat)
 	{
 		sem_wait(ph->sem->waiter);
@@ -43,10 +44,7 @@ int 	start(t_philo *ph)
 	int	i;
 
 	i = 0;
-	pthread_create(ph->t, NULL, check_status, (void *)ph);
 	proc(ph);
-	if (ph->n % 2 == 1)
-		upgrade_usleep(0.01);
 	return (0);
 }
 
