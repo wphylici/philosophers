@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: wphylici <wphylici@student.42.fr>          +#+  +:+       +#+        */
+/*   By: wphylici <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/21 06:39:59 by wphylici          #+#    #+#             */
-/*   Updated: 2021/04/23 12:47:52 by wphylici         ###   ########.fr       */
+/*   Updated: 2021/04/28 18:24:03 by wphylici         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ int	parse(t_philo *ph, char **argv)
 		ph->h_m_must_eat = -1;
 	else
 		ph->h_m_must_eat = ft_atoi(argv[5]);
-	ph->tmp_h_m_must_eat = ph->h_m_must_eat;
 	if (ph->num_of_philo < 2 || ph->num_of_philo >= INT_MAX
 		|| ph->time_to_die < 1 || ph->time_to_die >= INT_MAX
 		|| ph->time_to_eat < 1 || ph->time_to_eat >= INT_MAX
